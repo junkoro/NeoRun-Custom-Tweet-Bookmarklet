@@ -1,79 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="neorun-custom-tweet : " />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>neorun-custom-tweet</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NeoRun Custom Tweet Bookmarklet</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
+    <script src="customizer.js"></script>
   </head>
 
   <body>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/junkoro/NeoRun-Custom-Tweet-Bookmarklet">View on GitHub</a>
+    <!-- コンテナ開始 -->
+    <div class="container" ng-app="app" ng-controller="ctrl">
 
-          <h1 id="project_title">neorun-custom-tweet</h1>
-          <h2 id="project_tagline"></h2>
+      <!-- ヘッダー -->
+      <div class="page-header">
+        <h1>NeoRun Custom Tweet Bookmarklet</h1>
+        <h6>EPSON WristableGPSの分析サイト「NeoRun」の「ワークアウト詳細」のトレーニングデータをカスタマイズしてツイートするブックマークレットを作ります。</h6>
+      </div>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/junkoro/NeoRun-Custom-Tweet-Bookmarklet/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/junkoro/NeoRun-Custom-Tweet-Bookmarklet/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
+      <!-- STEP1 -->
+      <h4 style="margin-top:32px;">STEP1. ツイート内容のひな形</h4>
+      <div class="well">
+        <small>
+          <p>「=距離」などのキーワードが実際のトレーニングデータに置き換わります。必要なキーワードを使ってツイートのひな形を作ってください。</p>
+          <b>使用可能キーワード：</b><br>
+          =ワークアウト名、=タイム、=時間範囲、=距離、=平均ペース、=カロリー、
+          =ピッチ、=ストライド、=歩数、=スピード、=上昇、=下降、=心拍、=心拍範囲
+        </small>
+      </div>
+      <textarea style="width: 100%; height: 96px;" ng-model="format" ng-change="onChnageTaFormat()"></textarea>
+
+      <!-- STEP2 -->
+      <h4 style="margin-top:32px;">STEP2. ツイート内容のプレビュー（<span ng-class="{'text-danger': out.length > 140}">{{out.length}}文字</span> / 140文字）</h4>
+      <div id="divOut" class="alert alert-success" style="width: 100%; height: 96px;">
+        {{out}}
+      </div>
+
+      <!-- STEP3 -->
+      <h4 style="margin-top:32px;">STEP3. リンクをブックマーク</h4>
+      <div class="well">
+        <small>下のリンクボタンをブックマークツールバーにドラッグ・アンド・ドロップするなどしてブックマークに登録してください。</small>
+      </div>
+      <div class="row" style="margin-bottom:32px;">
+        <div class="col-sm-12">
+          <a class="btn btn-primary btn-lg btn-block" ng-href="javascript:(function()%7Bvar%20format=%22{{format}}%22;var%20out=formatNeoRunData(getNeoRunData(),format);out=prompt(%22この内容でTwitterのツイートページを表示します%22,out);if(out)%7Bopen(%22http://twitter.com/share?text=%22+encodeURIComponent(out),null,%22_blank%22);%7Dfunction%20formatNeoRunData(data,format)%7Bvar%20out=format;out=out.replace(/=ワークアウト名/,data.workoutName);out=out.replace(/=タイム/,data.duration);out=out.replace(/=時間範囲/,data.timeRange);out=out.replace(/=距離/,data.distance);out=out.replace(/=平均ペース/,data.averagePace);out=out.replace(/=カロリー/,data.calorie);out=out.replace(/=ピッチ/,data.averagePitch);out=out.replace(/=ストライド/,data.averageStride);out=out.replace(/=歩数/,data.steps);out=out.replace(/=スピード/,data.averageSpeed);out=out.replace(/=上昇/,data.totalAscent);out=out.replace(/=下降/,data.totalDescent);out=out.replace(/=心拍/,data.averagePulse);out=out.replace(/=心拍範囲/,data.pulseRange);return%20out;%7Dfunction%20getNeoRunData()%7Bfunction%20getCol(id)%7Breturn%20$(id).parent().parent();%7Dfunction%20getColData1Text(id)%7Breturn%20getCol(id).find(%22.data1%22).text();%7Dvar%20data=%7B%7D;data.workoutName=$(%22%23workout_detail%20.col-md-9.icon_pd%20.read-only.notread-area%22).text();var%20$timeCol=getCol(%22%23trainingTimeLabel%22);data.duration=$timeCol.find(%22.data1%22).text();data.timeRange=$timeCol.find(%22.data2%22).text();data.distance=getColData1Text(%22%23distanceLabel%22);data.averagePace=getColData1Text(%22%23averagePaceLabel%22);data.calorie=getColData1Text(%22%23calorieLabel%22);data.averagePitch=getColData1Text(%22%23averagePitchLabel%22);data.averageStride=getColData1Text(%22%23averageStrideLabel%22);data.steps=getColData1Text(%22%23stepsLabel%22);data.averageSpeed=getColData1Text(%22%23averageSpeedLabel%22);data.totalAscent=getColData1Text(%22%23totalAscentLabel%22);data.totalDescent=getColData1Text(%22%23totalDescentLabel%22);var%20$pulseCol=getCol(%22%23averagePulseLabel%22);data.averagePulse=$pulseCol.find(%22.data1%22).text();data.pulseRange=$pulseCol.find(%22.data3%22).text();return%20data;%7D%7D)();">
+            NeoRun Custom Tweet
+          </a>
+        </div>
+      </div>
+
     </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
-
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
-
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">neorun-custom-tweet maintained by <a href="https://github.com/junkoro">junkoro</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
+    <!-- コンテナ終了 -->
 
   </body>
+
 </html>
