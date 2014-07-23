@@ -1,5 +1,5 @@
-NeoRun-Tweet-Bookmarklet
-========================
+NeoRun-Custom-Tweet-Bookmarklet
+===============================
 
 EPSONのGPSウォッチ「WristableGPS」のデータ分析サイト「NeoRun」の「ワークアウト詳細」ページのトレーニングデータをツイートするためのブックマークレットです。
 
