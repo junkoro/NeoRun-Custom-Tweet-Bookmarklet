@@ -18,11 +18,11 @@
       <!-- ヘッダー -->
       <div class="page-header">
         <h1>NeoRun Custom Tweet Bookmarklet</h1>
-        <h6>EPSON WristableGPSの分析サイト「NeoRun」の「ワークアウト詳細」のトレーニングデータをカスタマイズしてツイートするブックマークレットを作ります。</h6>
+        <h6>EPSON <a href="http://www.epson.jp/products/wgps/" target="_blank">WristableGPS</a>の分析サイト「<a href="https://go-wellness.epson.com" target="_blank">NeoRun</a>」の「ワークアウト詳細」のトレーニングデータをカスタマイズしてツイートするブックマークレットを作ります。</h6>
       </div>
 
       <!-- STEP1 -->
-      <h4 style="margin-top:32px;">STEP1. ツイート内容のひな形</h4>
+      <h4 style="margin-top:32px;">STEP1. ツイートのひな形</h4>
       <div class="well">
         <small>
           <p>「=距離」などのキーワードが実際のトレーニングデータに置き換わります。必要なキーワードを使ってツイートのひな形を作ってください。</p>
@@ -34,7 +34,7 @@
       <textarea style="width: 100%; height: 96px;" ng-model="format" ng-change="onChnageTaFormat()"></textarea>
 
       <!-- STEP2 -->
-      <h4 style="margin-top:32px;">STEP2. ツイート内容のプレビュー（<span ng-class="{'text-danger': out.length > 140}">{{out.length}}文字</span> / 140文字）</h4>
+      <h4 style="margin-top:32px;">STEP2. ツイートのプレビュー（<span ng-class="{'text-danger': out.length > 140}">{{out.length}}文字</span> / 140文字）</h4>
       <div id="divOut" class="alert alert-success" style="width: 100%; height: 96px;">
         {{out}}
       </div>
@@ -50,6 +50,10 @@
             NeoRun Custom Tweet
           </a>
         </div>
+      </div>
+
+      <div class="row" style="margin-bottom:16px;">
+        <div style="text-align:center;"><small class="text-muted">バグ報告などはこちらのTwitterアカウントへ @junkoro</small></div>
       </div>
 
     </div>
