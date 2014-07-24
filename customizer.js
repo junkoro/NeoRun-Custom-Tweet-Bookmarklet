@@ -45,6 +45,7 @@ app.controller("ctrl", function($scope) {
   $scope.update = function() {
     $scope.preview = formatNeoRunData($scope.data, $scope.format, $scope.isCutSpace);
     $scope.code = codePre + $scope.format + "%22;var%20isCutSpace=" + $scope.isCutSpace + ";" + codePost;
+    $scope.saveConfig();
   };
 
   //ひな形変更時の処理
@@ -61,6 +62,27 @@ app.controller("ctrl", function($scope) {
     $scope.format += txt;
     $scope.$apply();
   });
+
+  //コンフィグの保存
+  $scope.saveConfig = function() {
+    var cfg = {};
+    cfg.format = $scope.format;
+    cfg.isCutSpace = $scope.isCutSpace;
+    localStorage.cfg = JSON.stringify(cfg);
+  };
+
+  //コンフィグの読み込み
+  $scope.loadConfig = function() {
+    if (!localStorage.cfg) {
+      return;
+    }
+    var cfg = JSON.parse(localStorage.cfg);
+    $scope.format = cfg.format;
+    $scope.isCutSpace = cfg.isCutSpace;
+  };
+
+  //コンフィグの読み込み
+  $scope.loadConfig();
 
 });
 
