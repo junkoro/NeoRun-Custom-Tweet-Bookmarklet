@@ -3,9 +3,11 @@
 
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>NeoRun Custom Tweet Bookmarklet</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="customizer.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
     <script src="customizer.js"></script>
   </head>
@@ -15,46 +17,123 @@
     <!-- コンテナ開始 -->
     <div class="container" ng-app="app" ng-controller="ctrl">
 
+
       <!-- ヘッダー -->
       <div class="page-header">
-        <h1>NeoRun Custom Tweet Bookmarklet</h1>
-        <h6>EPSON <a href="http://www.epson.jp/products/wgps/" target="_blank">WristableGPS</a>の分析サイト「<a href="https://go-wellness.epson.com" target="_blank">NeoRun</a>」の「ワークアウト詳細」のトレーニングデータをカスタマイズしてツイートするブックマークレットを作ります。</h6>
-      </div>
-
-      <!-- STEP1 -->
-      <h4 style="margin-top:32px;">STEP1. ツイートのひな形</h4>
-      <div class="well">
-        <small>
-          <p>「=距離」などのキーワードが実際のトレーニングデータに置き換わります。必要なキーワードを使ってツイートのひな形を作ってください。</p>
-          <b>使用可能キーワード：</b><br>
-          =ワークアウト名、=タイム、=時間範囲、=距離、=平均ペース、=カロリー、
-          =ピッチ、=ストライド、=歩数、=スピード、=上昇、=下降、=心拍、=心拍範囲
+        <h2>NeoRun Custom Tweet Bookmarklet</h2>
+        <small class="text-muted">
+          EPSON <a href="http://www.epson.jp/products/wgps/" target="_blank">WristableGPS</a>の分析サイト<a href="https://go-wellness.epson.com" target="_blank">NeoRun</a>のトレーニングデータをカスタマイズしてツイートするブックマークレットを作ります。
         </small>
       </div>
-      <textarea style="width: 100%; height: 96px;" ng-model="format" ng-change="onChnageTaFormat()"></textarea>
+
+
+      <!-- STEP1 -->
+      <div class="step">
+        <h4>STEP 1. ツイートのひな形</h4>
+        <hr>
+        <div class="well">
+          <small>
+            「=距離」などのキーワードが実際のトレーニングデータに置き換わります。必要なキーワードを使ってツイートのひな形を作ってください。
+            <div class="keywordGroup">
+              <b>キーワード</b><span class="text-muted">（クリック・タップで追加）</span>
+              <div class="keywords">
+                <span class="badge">=ワークアウト名</span>
+                <span class="badge">=タイム（長）</span>
+                <span class="badge">=タイム（短）</span>
+                <span class="badge">=開始時間</span>
+                <span class="badge">=終了時間</span>
+                <span class="badge">=距離</span>
+                <span class="badge">=平均ペース</span>
+                <span class="badge">=カロリー</span>
+                <span class="badge">=ピッチ</span>
+                <span class="badge">=ストライド</span>
+                <span class="badge">=歩数</span>
+                <span class="badge">=スピード</span>
+                <span class="badge">=上昇</span>
+                <span class="badge">=下降</span>
+                <span class="badge">=平均心拍</span>
+                <span class="badge">=最小心拍</span>
+                <span class="badge">=最大心拍</span>
+              </div>
+            </div>
+            <div class="keywordGroup">
+              <b>推奨タグ</b><span class="text-muted">（クリック・タップで追加）</span>
+              <div class="keywords">
+                <span class="badge">#WristableGPS</span>
+                <span class="badge">#NeoRunCustomTweet</span>
+              </div>
+            </div>
+          </small>
+        </div>
+        <form class="form-horizontal" role="form">
+          <textarea class="form-control multilines format" ng-model="format"></textarea>
+          <div class="form-group"  style="margin-top:8px;">
+            <div class="col-sm-2 col-sm-offset-10">
+              <button class="btn btn-danger btn-block btn-sm" ng-click="format = '';">クリア</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
 
       <!-- STEP2 -->
-      <h4 style="margin-top:32px;">STEP2. ツイートのプレビュー（<span ng-class="{'text-danger': out.length > 140}">{{out.length}}文字</span> / 140文字）</h4>
-      <div id="divOut" class="alert alert-success" style="width: 100%; height: 96px;">
-        {{out}}
-      </div>
-
-      <!-- STEP3 -->
-      <h4 style="margin-top:32px;">STEP3. リンクをブックマーク</h4>
-      <div class="well">
-        <small>下のリンクボタンをブックマークツールバーにドラッグ・アンド・ドロップするなどしてブックマークに登録してください。</small>
-      </div>
-      <div class="row" style="margin-bottom:32px;">
-        <div class="col-sm-12">
-          <a class="btn btn-primary btn-lg btn-block" ng-href="javascript:(function()%7Bvar%20format=%22{{format}}%22;var%20out=formatNeoRunData(getNeoRunData(),format);out=prompt(%22この内容でTwitterのツイートページを表示します%22,out);if(out)%7Bopen(%22http://twitter.com/share?text=%22+encodeURIComponent(out),null,%22_blank%22);%7Dfunction%20formatNeoRunData(data,format)%7Bvar%20out=format;out=out.replace(/=ワークアウト名/,data.workoutName);out=out.replace(/=タイム/,data.duration);out=out.replace(/=時間範囲/,data.timeRange);out=out.replace(/=距離/,data.distance);out=out.replace(/=平均ペース/,data.averagePace);out=out.replace(/=カロリー/,data.calorie);out=out.replace(/=ピッチ/,data.averagePitch);out=out.replace(/=ストライド/,data.averageStride);out=out.replace(/=歩数/,data.steps);out=out.replace(/=スピード/,data.averageSpeed);out=out.replace(/=上昇/,data.totalAscent);out=out.replace(/=下降/,data.totalDescent);out=out.replace(/=心拍/,data.averagePulse);out=out.replace(/=心拍範囲/,data.pulseRange);return%20out;%7Dfunction%20getNeoRunData()%7Bfunction%20getCol(id)%7Breturn%20$(id).parent().parent();%7Dfunction%20getColData1Text(id)%7Breturn%20getCol(id).find(%22.data1%22).text();%7Dvar%20data=%7B%7D;data.workoutName=$(%22%23workout_detail%20.col-md-9.icon_pd%20.read-only.notread-area%22).text();var%20$timeCol=getCol(%22%23trainingTimeLabel%22);data.duration=$timeCol.find(%22.data1%22).text();data.timeRange=$timeCol.find(%22.data2%22).text();data.distance=getColData1Text(%22%23distanceLabel%22);data.averagePace=getColData1Text(%22%23averagePaceLabel%22);data.calorie=getColData1Text(%22%23calorieLabel%22);data.averagePitch=getColData1Text(%22%23averagePitchLabel%22);data.averageStride=getColData1Text(%22%23averageStrideLabel%22);data.steps=getColData1Text(%22%23stepsLabel%22);data.averageSpeed=getColData1Text(%22%23averageSpeedLabel%22);data.totalAscent=getColData1Text(%22%23totalAscentLabel%22);data.totalDescent=getColData1Text(%22%23totalDescentLabel%22);var%20$pulseCol=getCol(%22%23averagePulseLabel%22);data.averagePulse=$pulseCol.find(%22.data1%22).text();data.pulseRange=$pulseCol.find(%22.data3%22).text();return%20data;%7D%7D)();">
-            NeoRun Custom Tweet
-          </a>
+      <div class="step">
+        <h4>STEP 2. ツイートのプレビュー</h4>
+        <hr>
+        <pre class="alert alert-success multilines" style="margin-bottom: 8px;">{{preview}}</pre>
+        <div class="text-muted" style="text-align:right;">
+          <span ng-class="{'text-danger': preview.length > 140}">{{preview.length}}文字</span> / 140文字
+        </div>
+        <div style="text-align:right;">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="isCutSpace" ng-change="update();"> 単位前のスペースを削除
+            </label>
+          </div>
         </div>
       </div>
 
-      <div class="row" style="margin-bottom:16px;">
-        <div style="text-align:center;"><small class="text-muted">バグ報告などはこちらのTwitterアカウントへ @junkoro</small></div>
+
+      <!-- STEP3 -->
+      <div class="step">
+
+        <h4>STEP 3. ブックマークレットの登録</h4>
+        <hr>
+
+        <!-- デスクトップ -->
+        <div class="well">
+          <small>
+            <b>デスクトップの場合</b>：下のボタンをブックマークツールバーにドラッグ・アンド・ドロップしてください
+          </small>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 col-sm-offset-4">
+            <a class="btn btn-primary btn-block" ng-href="{{code}}" style="margin-bottom:24px;">NeoRun Custom Tweet</a>
+          </div>
+        </div>
+
+        <!-- モバイル -->
+        <div class="well">
+          <small>
+            <p><b>モバイルの場合：</b></p>
+            <ol>
+              <li>このページをブックマークします</li>
+              <li>下のコードを全選択してコピーします</li>
+              <li>ブックマークの編集でコードをアドレスとしてペーストします</li>
+            </ol>
+          </small>
+        </div>
+        <textarea id="taCode"class="multilines form-control code" ng-model="code" onclick="onClickBtnSelectAll();" oncopy="onCopyTaCode();"></textarea>
+        <div class="row">
+          <div class="col-sm-4 col-sm-offset-4">
+            <button class="btn btn-info btn-block" onclick="onClickBtnSelectAll();">全選択</button>
+          </div>
+        </div>
+
       </div>
+
+      <!-- フッター -->
+      <hr>
 
     </div>
     <!-- コンテナ終了 -->
