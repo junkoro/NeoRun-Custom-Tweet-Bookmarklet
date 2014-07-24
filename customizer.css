@@ -1,0 +1,32 @@
+.step {
+  margin-top: 32px;
+}
+
+.keywordGroup {
+  margin-top: 16px;
+}
+
+.keywords {
+  margin-top: 4px;
+}
+
+.keywords .badge {
+  min-width: 48px;
+  font-weight: normal;
+  margin: 4px;
+  cursor: pointer;
+}
+
+.multilines {
+  width: 100%;
+}
+
+.multilines.format {
+  min-height: 128px;
+}
+
+.multilines.code {
+  min-height: 64px;
+  font-size: 11px;
+  margin-bottom: 16px;
+}
