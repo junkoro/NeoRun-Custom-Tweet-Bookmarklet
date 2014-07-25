@@ -54,7 +54,7 @@ app.controller("ctrl", function($scope) {
   });
 
   //キーワードのバッジにクリックでテキストエリアに追加する処理を追加する
-  $(".keywords .badge").on("click", function(evt) {
+  $(".words .badge").on("click", function(evt) {
     var txt = $(evt.target).text();
     if ($scope.format.length > 0) {
       $scope.format += " ";
