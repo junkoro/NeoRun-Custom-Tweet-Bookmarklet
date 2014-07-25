@@ -7,9 +7,6 @@
     <title>NeoRun Custom Tweet Bookmarklet</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="customizer.css">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
-    <script src="customizer.js"></script>
   </head>
 
   <body>
@@ -29,115 +26,182 @@
 
       <!-- STEP1 -->
       <div class="step">
-        <h4>STEP 1. ツイートのひな形</h4>
-        <hr>
-        <div class="well">
-          <small>
-            「=距離」などのキーワードが実際のトレーニングデータに置き換わります。必要なキーワードを使ってツイートのひな形を作ってください。
-            <div class="keywordGroup">
-              <b>キーワード</b><span class="text-muted">（クリック・タップで追加）</span>
-              <div class="keywords">
-                <span class="badge">=日付</span>
-                <span class="badge">=ワークアウト名</span>
-                <span class="badge">=タイム（長）</span>
-                <span class="badge">=タイム（短）</span>
-                <span class="badge">=開始時間</span>
-                <span class="badge">=終了時間</span>
-                <span class="badge">=距離</span>
-                <span class="badge">=平均ペース</span>
-                <span class="badge">=カロリー</span>
-                <span class="badge">=ピッチ</span>
-                <span class="badge">=ストライド</span>
-                <span class="badge">=歩数</span>
-                <span class="badge">=スピード</span>
-                <span class="badge">=上昇</span>
-                <span class="badge">=下降</span>
-                <span class="badge">=平均心拍</span>
-                <span class="badge">=最小心拍</span>
-                <span class="badge">=最大心拍</span>
-              </div>
-            </div>
-            <div class="keywordGroup">
-              <b>推奨タグ</b><span class="text-muted">（クリック・タップで追加）</span>
-              <div class="keywords">
-                <span class="badge">#WristableGPS</span>
-                <span class="badge">#NeoRunCustomTweet</span>
-              </div>
-            </div>
-          </small>
+
+        <!-- ステップヘッダー -->
+        <h4>ツイートのカスタマイズ</h4>
+        <div class="stepCaption">
+          「=距離」などのキーワードが実際のトレーニングデータに置き換わります。必要なキーワードを使ってツイートをカスタマイズください。
         </div>
-        <form class="form-horizontal" role="form">
-          <textarea class="form-control multilines format" ng-model="format"></textarea>
-          <div class="form-group"  style="margin-top:8px;">
-            <div class="col-sm-2 col-sm-offset-10">
-              <button class="btn btn-danger btn-block btn-sm" ng-click="format = '';">クリア</button>
-            </div>
+        <hr>
+
+        <!-- プレビュー部 -->
+        <div class="preview">
+          <pre class="alert alert-success multilines">{{preview}}</pre>
+          <div class="tweetLength">
+            <span ng-class="{'text-danger': preview.length > 140}">{{preview.length}}文字</span> / 140文字
           </div>
-        </form>
+        </div>
+
+        <!-- カスタマイザー部 -->
+        <div class="row">
+
+          <!-- 左ペイン -->
+          <div class="col-sm-6">
+
+            <!-- エディター -->
+            <div class="pane">
+
+              <!-- メインコンテンツ -->
+              <textarea class="form-control multilines paneContentMain" ng-model="format"></textarea>
+
+              <!-- メインコンテンツコントローラー -->
+              <div class="row paneContentCtrl">
+                <div class="col-sm-4">
+                  <button class="btn btn-danger btn-block" ng-click="format = '';">クリア</button>
+                </div>
+                <div class="col-sm-8">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" ng-model="isCutSpace" ng-change="update();"> 単位前のスペースを削除
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- 右ペイン -->
+          <div class="col-sm-6">
+
+            <!-- ワードセレクター -->
+            <div class="pane">
+
+              <!-- メインコンテンツ -->
+              <div class="tab-content paneContentMain">
+
+                <!-- キーワードタブ -->
+                <div id="tabKeywords" class="tab-pane active words">
+                  <span class="badge">=日付</span>
+                  <span class="badge">=ワークアウト名</span>
+                  <span class="badge">=タイム（長）</span>
+                  <span class="badge">=タイム（短）</span>
+                  <span class="badge">=開始時間</span>
+                  <span class="badge">=終了時間</span>
+                  <span class="badge">=距離</span>
+                  <span class="badge">=平均ペース</span>
+                  <span class="badge">=カロリー</span>
+                  <span class="badge">=ピッチ</span>
+                  <span class="badge">=ストライド</span>
+                  <span class="badge">=歩数</span>
+                  <span class="badge">=スピード</span>
+                  <span class="badge">=上昇</span>
+                  <span class="badge">=下降</span>
+                  <span class="badge">=平均心拍</span>
+                  <span class="badge">=最小心拍</span>
+                  <span class="badge">=最大心拍</span>
+                </div>
+
+                <!-- タグタブ -->
+                <div id="tabTags" class="tab-pane words">
+                  <span class="badge">#WristableGPS</span>
+                  <span class="badge">#NeoRunCustomTweet</span>
+                </div>
+
+              </div>
+              <!-- END タブグループ -->
+
+              <!-- メインコンテンツコントローラー -->
+              <ul class="nav nav-pills nav-justified paneContentCtrl" role="tablist">
+                <li class="active"><a href="#tabKeywords" role="tab" data-toggle="tab">キーワード</a></li>
+                <li><a href="#tabTags" role="tab" data-toggle="tab">推奨タグ</a></li>
+              </ul>
+
+            </div>
+
+          </div>
+          <!-- END 右ペイン -->
+
+        </div>
+        <!-- END カスタマイザー部 -->
+
+        <p class="description">※キーワードや推奨タグはクリック・タップで追加可</p>
+
       </div>
+      <!-- END STEP1 -->
 
 
       <!-- STEP2 -->
       <div class="step">
-        <h4>STEP 2. ツイートのプレビュー</h4>
-        <hr>
-        <pre class="alert alert-success multilines" style="margin-bottom: 8px;">{{preview}}</pre>
-        <div class="text-muted" style="text-align:right;">
-          <span ng-class="{'text-danger': preview.length > 140}">{{preview.length}}文字</span> / 140文字
-        </div>
-        <div style="text-align:right;">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="isCutSpace" ng-change="update();"> 単位前のスペースを削除
-            </label>
-          </div>
-        </div>
-      </div>
 
-
-      <!-- STEP3 -->
-      <div class="step">
-
-        <h4>STEP 3. ブックマークレットの登録</h4>
+        <!-- ステップヘッダー -->
+        <h4>ブックマークレットの登録</h4>
         <hr>
 
-        <!-- デスクトップ -->
-        <div class="well">
-          <small>
-            <b>デスクトップの場合</b>：下のボタンをブックマークツールバーにドラッグ・アンド・ドロップしてください
-          </small>
-        </div>
-        <div class="row">
-          <div class="col-sm-4 col-sm-offset-4">
-            <a class="btn btn-primary btn-block" ng-href="{{code}}" style="margin-bottom:24px;">NeoRun Custom Tweet</a>
-          </div>
-        </div>
+        <!-- タブ -->
+        <ul class="nav nav-pills nav-justified registBookmarklet" role="tablist">
+          <li class="active"><a href="#tabMobile" role="tab" data-toggle="tab">モバイルの場合</a></li>
+          <li><a href="#tabDesktop" role="tab" data-toggle="tab">デスクトップの場合</a></li>
+        </ul>
 
-        <!-- モバイル -->
-        <div class="well">
-          <small>
-            <p><b>モバイルの場合：</b></p>
-            <ol>
-              <li>このページをブックマークします</li>
-              <li>下のコードを全選択してコピーします</li>
-              <li>ブックマークの編集でコードをアドレスとしてペーストします</li>
-            </ol>
-          </small>
-        </div>
-        <textarea id="taCode"class="multilines form-control code" ng-model="code" onclick="onClickBtnSelectAll();" oncopy="onCopyTaCode();"></textarea>
-        <div class="row">
-          <div class="col-sm-4 col-sm-offset-4">
-            <button class="btn btn-info btn-block" onclick="onClickBtnSelectAll();">全選択</button>
+        <!-- タブコンテンツ -->
+        <div class="tab-content">
+
+          <!-- モバイルタブ -->
+          <div id="tabMobile" class="tab-pane active">
+            <div class="well">
+              <small>
+                <ol>
+                  <li>このページをブックマークします</li>
+                  <li>下のコードを全選択してコピーします</li>
+                  <li>ブックマークの編集でコードをアドレスとしてペーストします</li>
+                </ol>
+              </small>
+            </div>
+            <textarea id="taCode"class="multilines form-control code" ng-model="code" onclick="onClickBtnSelectAll();" oncopy="onCopyTaCode();"></textarea>
+            <div class="row">
+              <div class="col-sm-6 col-sm-offset-3">
+                <button class="btn btn-info btn-block btn-lg" onclick="onClickBtnSelectAll();">全選択</button>
+              </div>
+            </div>
           </div>
+
+          <!-- デスクトップタブ -->
+          <div id="tabDesktop" class="tab-pane">
+            <div class="well">
+              <small>
+                下のボタンをブックマークツールバーにドラッグ・アンド・ドロップしてください
+              </small>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 col-sm-offset-3">
+                <a class="btn btn-success btn-block btn-lg" ng-href="{{code}}">NeoRun Custom Tweet</a>
+              </div>
+            </div>
+          </div>
+
         </div>
+        <!-- END タブコンテンツ -->
 
       </div>
+      <!-- END STEP2 -->
+
 
       <!-- フッター -->
       <hr>
 
+
     </div>
     <!-- コンテナ終了 -->
+
+
+    <!-- JS -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="customizer.js"></script>
+
 
   </body>
 
